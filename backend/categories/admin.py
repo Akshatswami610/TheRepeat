@@ -1,4 +1,3 @@
-
 from django.contrib import admin
 from unfold.admin import ModelAdmin
 
@@ -16,9 +15,7 @@ class CategoryAdmin(ModelAdmin):
     )
 
     list_display_links = ('title',)
-
     list_filter = ('is_active',)
-
     search_fields = ('title', 'subtitle')
 
     prepopulated_fields = {
