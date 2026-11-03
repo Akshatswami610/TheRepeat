@@ -4,7 +4,6 @@ from unfold.admin import ModelAdmin
 
 from .models import Category
 
-
 @admin.register(Category)
 class CategoryAdmin(ModelAdmin):
 
