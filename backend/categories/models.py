@@ -24,6 +24,8 @@ class Category(models.Model):
     background_img = models.ImageField( upload_to=category_background_path )
     cover_img = models.ImageField( upload_to=category_cover_path )
 
+    youtube_playlist_id = models.CharField( max_length=100, blank=True, help_text="Enter the YouTube Music playlist ID" )
+
     display_order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
 

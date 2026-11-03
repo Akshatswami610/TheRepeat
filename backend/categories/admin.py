@@ -10,13 +10,14 @@ class CategoryAdmin(ModelAdmin):
         'id',
         'title',
         'slug',
+        'youtube_playlist_id',
         'display_order',
         'is_active',
     )
 
     list_display_links = ('title',)
     list_filter = ('is_active',)
-    search_fields = ('title', 'subtitle')
+    search_fields = ('title', 'subtitle', 'youtube_playlist_id')
 
     prepopulated_fields = {
         'slug': ('title',)
@@ -25,6 +26,7 @@ class CategoryAdmin(ModelAdmin):
     list_editable = (
         'display_order',
         'is_active',
+        'youtube_playlist_id',
     )
 
     ordering = ('display_order',)
