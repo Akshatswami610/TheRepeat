@@ -1,8 +1,8 @@
+
 from pathlib import Path
 from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 SECRET_KEY = config('SECRET_KEY')
 
@@ -11,16 +11,44 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+# Application definition
+
 INSTALLED_APPS = [
+    # Django Unfold - must be before django.contrib.admin
+    'unfold',
+
+    # Django default apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'categories',
+
+    # Third-party apps
     'rest_framework',
+
+    # Local apps
+    'categories',
 ]
+
+
+# Django Unfold Configuration
+
+UNFOLD = {
+    "SITE_TITLE": "Music-app Admin",
+    "SITE_HEADER": "Music-app",
+    "SITE_SUBHEADER": "Music website",
+    "SITE_SYMBOL": "home",
+
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": True,
+
+    "DASHBOARD_CALLBACK": None,
+}
+
+
+# Middleware
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -32,7 +60,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
+# URL Configuration
+
 ROOT_URLCONF = 'config.urls'
+
+
+# Templates
 
 TEMPLATES = [
     {
@@ -49,8 +83,11 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = 'config.wsgi.application'
 
+
+# Database Configuration
 
 DATABASES = {
     "default": {
@@ -63,6 +100,8 @@ DATABASES = {
     }
 }
 
+
+# Password Validation
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -80,19 +119,22 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Internationalization
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Kolkata'
 
-
 USE_I18N = True
+
 USE_TZ = True
 
 
+# Static Files
+
 STATIC_URL = 'static/'
 
-MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
-    },
-}
+
+# Default Primary Key
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
