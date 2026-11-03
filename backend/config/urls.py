@@ -9,6 +9,7 @@ urlpatterns = [
 
     # API Urls
     path('api/categories/', include('categories.urls')),
+    path('api/feedback/', include('feedback.urls')),
 
     #frontend pages
     path('', home, name='home'),
