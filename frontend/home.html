@@ -690,7 +690,7 @@ window.onYouTubeIframeAPIReady = () => {
     title.textContent = category.title || "Music";
     fitTitle();
     description.textContent = category.subtitle || "Find your vibe.";
-    document.title = (category.title || "Music") + " · " + BASE_TITLE;
+    document.title = BASE_TITLE + " · " + (category.title || "Music");
     trackTitle.textContent = "Loading playlist…";
     trackArtist.textContent = category.title || "";
     currentTime.textContent = totalDuration.textContent = "0:00";
