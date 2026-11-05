@@ -517,7 +517,7 @@
   <p class="lead">Music App groups playlists by the moment they suit, so you spend less time searching and more time listening.</p>
   <div class="steps">
     <div><h3>Pick a category</h3><p>Truck, Bus, Salon, Rajasthani and more. Each one has its own playlist and look.</p></div>
-    <div><h3>It starts for you</h3><p>The first category is ready when you arrive. Press play if your browser holds back sound.</p></div>
+    <div><h3>Ready when you are</h3><p>The first category is loaded when you arrive. Press play whenever you like.</p></div>
     <div><h3>No account needed</h3><p>Open the page and listen. Playback runs through YouTube's embedded player.</p></div>
   </div>
 </div></section>
@@ -528,7 +528,7 @@
     <details><summary>Is Music App free?</summary><p>There is no membership on this site. YouTube may still show ads, and availability depends on YouTube's own terms.</p></details>
     <details><summary>Do I need an account?</summary><p>No. Browse the categories and press play.</p></details>
     <details><summary>Why is the YouTube player on the page?</summary><p>Songs play through YouTube's embedded player, and YouTube requires it to stay visible.</p></details>
-    <details><summary>Why didn't the music start by itself?</summary><p>Browsers often block sound until you interact with the page. Press play once and it will start.</p></details>
+    <details><summary>Does the music start automatically?</summary><p>No. Nothing plays until you press play or choose a category.</p></details>
     <details><summary>How can I suggest a playlist?</summary><p>Send it through the feedback page.</p></details>
   </div>
   <a class="more" href="{% url 'feedback' %}">Send feedback</a>
@@ -556,7 +556,7 @@ window.onYouTubeIframeAPIReady = () => {
 
   let player = null, playerReady = false, pendingPlaylistId = null, lastLoadedPlaylistId = null;
   let progressTimer = null, isSeeking = false, skipCount = 0;
-  let autoplayNext = false, tryAutoplay = true;
+  let autoplayNext = false;
 
   const slugify = text => (text || "").toString().toLowerCase().trim().replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-+|-+$/g, "");
   const slugOf = c => c.slug || slugify(c.title);
@@ -629,7 +629,7 @@ window.onYouTubeIframeAPIReady = () => {
     try { player.stopVideo(); } catch (e) {}
     try {
       if (autoplayNext) player.loadPlaylist(options);   // user clicked a category: play it
-      else player.cuePlaylist(options);                 // first visit: cue, then try autoplay
+      else player.cuePlaylist(options);                 // first visit: load the playlist but stay paused
     } catch (error) {
       console.error("Could not request playlist:", error);
       trackTitle.textContent = "Could not load playlist";
@@ -654,14 +654,7 @@ window.onYouTubeIframeAPIReady = () => {
             const S = YT.PlayerState;
             if (e.data === S.PLAYING) { skipCount = 0; hint.textContent = ""; updateTrackDetails(); updatePlayButton(true); }
             else if (e.data === S.PAUSED || e.data === S.ENDED) updatePlayButton(false);
-            else if (e.data === S.CUED) {
-              updateTrackDetails(); updatePlayButton(false);
-              if (tryAutoplay) {          // best-effort autoplay on landing; browsers may refuse
-                tryAutoplay = false;
-                player.playVideo();
-                setTimeout(() => { if (player.getPlayerState() !== S.PLAYING) hint.textContent = "Press play to start the music."; }, 1800);
-              }
-            }
+            else if (e.data === S.CUED) { updateTrackDetails(); updatePlayButton(false); }
             updateProgress();
           },
           onError: e => showPlayerError(e.data)
@@ -709,7 +702,7 @@ window.onYouTubeIframeAPIReady = () => {
     url.searchParams.set("c", slugOf(category));
     history.replaceState(null, "", url);
 
-    if (fromUser) { tryAutoplay = false; autoplayNext = true; }
+    if (fromUser) autoplayNext = true;   // only a click on a category starts playback
     lastLoadedPlaylistId = null;
     pendingPlaylistId = normalizePlaylistId(category.youtube_playlist_id);
     if (!pendingPlaylistId) {
