@@ -1,4 +1,4 @@
-# 🎵 Music App
+# TheRepeat
 
 **Discover music for every mood, moment and activity.**
 
