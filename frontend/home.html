@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}TheRepeat · Pick a category and press play{% endblock %}
+{% block title %}TheRepeat · Find your sound{% endblock %}
 {% block extra_head %}
 <style>
     .stage {
@@ -479,14 +479,14 @@
   <div class="stage-grid">
     <div class="now">
       <h1 id="heroTitle">Music</h1>
-      <p class="now-desc" id="heroDescription">Loading your music…</p>
+      <p class="now-desc" id="heroDescription">A playlist for wherever the day takes you.</p>
 
       <div class="deck" aria-label="Music player">
         <div class="yt-box"><div id="youtubePlayer"></div></div>
         <div class="deck-info">
           <div class="deck-top">
             <div class="track-copy">
-              <strong class="track-title" id="trackTitle">Loading playlist…</strong>
+              <strong class="track-title" id="trackTitle">Your playlist is getting ready…</strong>
               <span class="track-artist" id="trackArtist">YouTube</span>
             </div>
             <div class="controls" aria-label="Playback controls">
@@ -505,7 +505,7 @@
       <p class="hint" id="playHint" role="status" aria-live="polite"></p>
 
       <section class="cats" aria-labelledby="catsHeading">
-        <div class="cats-title"><span id="catsHeading">Choose your vibe</span></div>
+        <div class="cats-title"><span id="catsHeading">Find your sound</span></div>
         <div class="cat-list" id="categoryList"><p class="muted">Loading categories…</p></div>
       </section>
     </div>
@@ -513,25 +513,25 @@
 </section>
 
 <section class="section" id="about"><div class="inner">
-  <h2>Every road has a soundtrack</h2>
-  <p class="lead">TheRepeat groups playlists by the moment they suit, so you spend less time searching and more time listening.</p>
+  <h2>A soundtrack for every kind of day</h2>
+  <p class="lead">From long drives to busy workdays, TheRepeat brings playlists together by category. Pick what fits the moment and let the music take it from there.</p>
   <div class="steps">
-    <div><h3>Pick a category</h3><p>Truck, Bus, Salon, Rajasthani and more. Each one has its own playlist and look.</p></div>
-    <div><h3>Ready when you are</h3><p>The first category is loaded when you arrive. Press play whenever you like.</p></div>
-    <div><h3>No account needed</h3><p>Open the page and listen. Playback runs through YouTube's embedded player.</p></div>
+    <div><h3>Choose your category</h3><p>Explore playlists made for trucks, buses, salons, regional music and more. Every category has a sound of its own.</p></div>
+    <div><h3>Press play when you’re ready</h3><p>Your starting playlist is ready when you land. Hit play whenever you want to get going.</p></div>
+    <div><h3>Just press play</h3><p>No sign-up or account needed. Choose a category and listen right here through the YouTube player.</p></div>
   </div>
 </div></section>
 
 <section class="section faq-wrap" id="faq"><div class="inner">
-  <h2>Questions</h2>
+  <h2>Good to know</h2>
   <div class="faq">
-    <details><summary>Is TheRepeat App free?</summary><p>There is no membership on this site. YouTube may still show ads, and availability depends on YouTube's own terms.</p></details>
-    <details><summary>Do I need an account?</summary><p>No. Browse the categories and press play.</p></details>
-    <details><summary>Why is the YouTube player on the page?</summary><p>Songs play through YouTube's embedded player, and YouTube requires it to stay visible.</p></details>
-    <details><summary>Does the music start automatically?</summary><p>No. Nothing plays until you press play or choose a category.</p></details>
-    <details><summary>How can I suggest a playlist?</summary><p>Send it through the feedback page.</p></details>
+    <details><summary>Can I use TheRepeat for free?</summary><p>There’s no membership or subscription required to use TheRepeat. YouTube may show ads, and playback is subject to YouTube’s terms and availability.</p></details>
+    <details><summary>Do I need to create an account?</summary><p>Not at all. Browse the categories, choose a playlist and press play.</p></details>
+    <details><summary>Why does music play through YouTube?</summary><p>TheRepeat uses YouTube’s embedded player to stream playlists. YouTube requires the player to remain visible while you listen.</p></details>
+    <details><summary>Will music start playing automatically?</summary><p>No. Your playlist loads paused. Press play or choose a category to start listening.</p></details>
+    <details><summary>Can I suggest a category or playlist?</summary><p>Absolutely. Send your idea through the feedback page. We’d love to hear it.</p></details>
   </div>
-  <a class="more" href="{% url 'feedback' %}">Send feedback</a>
+  <a class="more" href="{% url 'feedback' %}">Share feedback</a>
 </div></section>
 {% endblock %}
 
@@ -691,7 +691,7 @@ window.onYouTubeIframeAPIReady = () => {
     fitTitle();
     description.textContent = category.subtitle || "Find your vibe.";
     document.title = BASE_TITLE + " · " + (category.title || "Music");
-    trackTitle.textContent = "Loading playlist…";
+    trackTitle.textContent = "Your playlist is getting ready…";
     trackArtist.textContent = category.title || "";
     currentTime.textContent = totalDuration.textContent = "0:00";
     progress.value = 0; progress.style.setProperty("--p", "0%");
@@ -738,7 +738,7 @@ window.onYouTubeIframeAPIReady = () => {
       const categories = (Array.isArray(data) ? data : (data.results || []))
         .slice().sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0));
       categoryList.innerHTML = "";
-      if (!categories.length) { categoryList.innerHTML = '<p class="muted">No categories yet.</p>'; return; }
+      if (!categories.length) { categoryList.innerHTML = '<p class="muted">New categories are on the way.</p>'; return; }
 
       const buttons = new Map();
       categories.forEach(category => {
@@ -760,7 +760,7 @@ window.onYouTubeIframeAPIReady = () => {
       selectCategory(initial, buttons.get(initial), false);
     } catch (error) {
       console.error("Category loading failed:", error);
-      categoryList.innerHTML = '<p class="muted">Could not load categories. Please try again later.</p>';
+      categoryList.innerHTML = '<p class="muted">We couldn’t load the categories. Please refresh and try again.</p>';
     }
   }
   init();

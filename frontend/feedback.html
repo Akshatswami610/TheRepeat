@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}TheRepeat · Feedback{% endblock %}
+{% block title %}TheRepeat · Share your feedback{% endblock %}
 {% block extra_head %}
 <style>
   .fb {
@@ -139,21 +139,21 @@
 {% block content %}
 <section class="fb">
   <div class="fb-intro">
-    <h1>Tell us what to play next</h1>
-    <p>Missing a category, a song that won't load, or an idea? A short note is enough.</p>
-    <a class="back-link" href="{% url 'home' %}">Back to the music</a>
+    <h1>Help shape what plays next</h1>
+    <p>Have a playlist idea, spotted something that needs fixing, or want to see a new category? We’re listening. Tell us what you think.</p>
+    <a class="back-link" href="{% url 'home' %}">Back to TheRepeat</a>
   </div>
   <form id="feedbackForm" class="fb-form" novalidate>
     {% csrf_token %}
-    <label for="feedbackName">Your name</label>
-    <input id="feedbackName" name="name" type="text" maxlength="100" autocomplete="name" required>
+    <label for="feedbackName">Name</label>
+    <input id="feedbackName" name="name" placeholder="Name" type="text" maxlength="100" autocomplete="name" required>
     <label for="feedbackEmail">Email <span class="optional">(optional)</span></label>
     <input id="feedbackEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com">
-    <label for="feedbackMessage">Message</label>
-    <textarea id="feedbackMessage" name="message" rows="6" maxlength="3000" placeholder="Your thoughts or a playlist suggestion" required></textarea>
+    <label for="feedbackMessage">Your feedback</label>
+    <textarea id="feedbackMessage" name="message" rows="6" maxlength="3000" placeholder="Share an idea, report an issue, or suggest a playlist…" required></textarea>
     <p class="status" id="formStatus" role="status" aria-live="polite"></p>
-    <button class="send" type="submit" id="feedbackSubmit">Send feedback</button>
-    <p class="note">Please don't include passwords or other sensitive information.</p>
+    <button class="send" type="submit" id="feedbackSubmit">Send message</button>
+    <p class="note">Please avoid sharing passwords or other sensitive personal information.</p>
   </form>
 </section>
 {% endblock %}
@@ -166,15 +166,15 @@ document.addEventListener("DOMContentLoaded",()=>{
   form.addEventListener("submit",async event=>{
     event.preventDefault();status.textContent="";status.classList.remove("error");
     const payload={name:form.elements["name"].value.trim(),email:form.elements["email"].value.trim()||null,message:form.elements["message"].value.trim()};
-    if(!payload.name||!payload.message){status.textContent="Please enter your name and message.";status.classList.add("error");return;}
+    if(!payload.name||!payload.message){status.textContent="Please add your name and a message before sending.";status.classList.add("error");return;}
     submit.disabled=true;submit.textContent="Sending…";
     try{
       const response=await fetch("/api/feedback/",{method:"POST",headers:{"Content-Type":"application/json",...(csrf?{"X-CSRFToken":csrf}:{})},body:JSON.stringify(payload)});
       const result=await response.json().catch(()=>({}));
-      if(!response.ok){const first=Object.values(result).flat()[0];throw new Error(typeof first==="string"?first:"Unable to send feedback. Please try again.");}
-      form.reset();status.textContent="Thanks, your feedback has been sent.";
-    }catch(error){status.textContent=error.message||"Something went wrong. Please try again.";status.classList.add("error");}
-    finally{submit.disabled=false;submit.textContent="Send feedback";}
+      if(!response.ok){const first=Object.values(result).flat()[0];throw new Error(typeof first==="string"?first:"We couldn’t send your message. Please try again.");}
+      form.reset();status.textContent="Thanks for reaching out. Your feedback has been sent.";
+    }catch(error){status.textContent=error.message||"Something went wrong. Please try again in a moment.";status.classList.add("error");}
+    finally{submit.disabled=false;submit.textContent="Send message";}
   });
 });
 </script>
