@@ -166,6 +166,27 @@
       font-size: 22px;
     }
 
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .site-footer .coffee {
+      padding: 7px 14px;
+      border: 1px solid var(--paint);
+      border-radius: 6px;
+      color: var(--paint);
+      font-weight: 500;
+      transition: background .2s, color .2s;
+    }
+
+    .site-footer .coffee:hover {
+      background: var(--paint);
+      color: var(--asphalt);
+    }
+
     @media (max-width: 760px) {
       .brand {
         font-size: 23px;
@@ -229,7 +250,9 @@
             Akshat Swami
         </a>
     </span>
-    <a href="{% url 'feedback' %}">Share feedback</a>
+    <span class="footer-links">
+      <a class="coffee" href="https://buymeacoffee.com/akshatswami_" target="_blank" rel="noopener noreferrer">&#9749; Buy me a coffee</a>
+    </span>
   </footer>
 
   <script>
