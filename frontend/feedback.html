@@ -1,10 +1,181 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Feedback · Music App{% endblock %}
+{% block extra_head %}
+<style>
+  .fb {
+    min-height: 100svh;
+    padding: 120px clamp(20px, 5vw, 72px) 70px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 540px);
+    gap: clamp(32px, 7vw, 110px);
+    align-items: start;
+    max-width: 1280px;
+    margin: auto;
+  }
 
-</body>
-</html>
+  .fb-intro h1 {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(56px, 9vw, 128px);
+    line-height: .88;
+    text-transform: uppercase;
+  }
+
+  .fb-intro p {
+    max-width: 420px;
+    margin: 26px 0 0;
+    color: var(--mist);
+    font-size: 18px;
+    line-height: 1.65;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-top: 34px;
+    color: var(--chalk);
+    border-bottom: 1px solid var(--paint);
+    padding-bottom: 2px;
+    font-size: 15px;
+  }
+
+  .fb-form {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(22px, 4vw, 36px);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+
+  .fb-form label {
+    margin: 16px 0 7px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .fb-form label:first-of-type {
+    margin-top: 0;
+  }
+
+  .optional {
+    color: var(--mist);
+    font-weight: 400;
+  }
+
+  .fb-form input,
+  .fb-form textarea {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 13px 14px;
+    color: var(--chalk);
+    background: var(--asphalt);
+    transition: border-color .2s;
+  }
+
+  .fb-form input:focus,
+  .fb-form textarea:focus {
+    border-color: var(--paint);
+    outline: none;
+  }
+
+  .fb-form textarea {
+    resize: vertical;
+    min-height: 150px;
+  }
+
+  .fb-form ::placeholder {
+    color: #6f6d68;
+  }
+
+  .send {
+    margin-top: 20px;
+    border: 0;
+    border-radius: 6px;
+    padding: 14px 20px;
+    background: var(--paint);
+    color: var(--asphalt);
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: filter .2s;
+  }
+
+  .send:hover {
+    filter: brightness(1.08);
+  }
+
+  .send:disabled {
+    opacity: .6;
+    cursor: wait;
+  }
+
+  .status {
+    min-height: 22px;
+    margin: 14px 0 0;
+    font-size: 14px;
+    color: var(--paint);
+  }
+
+  .status.error {
+    color: #ff8f8f;
+  }
+
+  .note {
+    margin: 16px 0 0;
+    color: var(--mist);
+    font-size: 13px;
+  }
+
+  @media (max-width: 860px) {
+    .fb {
+      grid-template-columns: 1fr;
+      padding-top: 100px;
+    }
+  }
+</style>
+{% endblock %}
+{% block content %}
+<section class="fb">
+  <div class="fb-intro">
+    <h1>Tell us what to play next</h1>
+    <p>Missing a category, a song that won't load, or an idea? A short note is enough.</p>
+    <a class="back-link" href="{% url 'home' %}">Back to the music</a>
+  </div>
+  <form id="feedbackForm" class="fb-form" novalidate>
+    {% csrf_token %}
+    <label for="feedbackName">Your name</label>
+    <input id="feedbackName" name="name" type="text" maxlength="100" autocomplete="name" required>
+    <label for="feedbackEmail">Email <span class="optional">(optional)</span></label>
+    <input id="feedbackEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com">
+    <label for="feedbackMessage">Message</label>
+    <textarea id="feedbackMessage" name="message" rows="6" maxlength="3000" placeholder="Your thoughts or a playlist suggestion" required></textarea>
+    <p class="status" id="formStatus" role="status" aria-live="polite"></p>
+    <button class="send" type="submit" id="feedbackSubmit">Send feedback</button>
+    <p class="note">Please don't include passwords or other sensitive information.</p>
+  </form>
+</section>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+  const form=document.getElementById("feedbackForm");if(!form)return;
+  const status=document.getElementById("formStatus"),submit=document.getElementById("feedbackSubmit");
+  const csrf=form.querySelector('[name="csrfmiddlewaretoken"]')?.value;
+  form.addEventListener("submit",async event=>{
+    event.preventDefault();status.textContent="";status.classList.remove("error");
+    const payload={name:form.elements["name"].value.trim(),email:form.elements["email"].value.trim()||null,message:form.elements["message"].value.trim()};
+    if(!payload.name||!payload.message){status.textContent="Please enter your name and message.";status.classList.add("error");return;}
+    submit.disabled=true;submit.textContent="Sending…";
+    try{
+      const response=await fetch("/api/feedback/",{method:"POST",headers:{"Content-Type":"application/json",...(csrf?{"X-CSRFToken":csrf}:{})},body:JSON.stringify(payload)});
+      const result=await response.json().catch(()=>({}));
+      if(!response.ok){const first=Object.values(result).flat()[0];throw new Error(typeof first==="string"?first:"Unable to send feedback. Please try again.");}
+      form.reset();status.textContent="Thanks, your feedback has been sent.";
+    }catch(error){status.textContent=error.message||"Something went wrong. Please try again.";status.classList.add("error");}
+    finally{submit.disabled=false;submit.textContent="Send feedback";}
+  });
+});
+</script>
+{% endblock %}
