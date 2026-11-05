@@ -1,10 +1,262 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="theme-color" content="#0d0e10">
+  <meta name="description" content="Music App: pick a category and play its playlist.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23ffc83d'/%3E%3Cpath d='M8 13v6M12 9v14M16 6v20M20 9v14M24 13v6' stroke='%230d0e10' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <title>{% block title %}Music App{% endblock %}</title>
+  <script>
+    /* YouTube embeds fail on a raw IP origin; keep local development on "localhost". */
+    if (location.hostname === "127.0.0.1") location.replace(location.href.replace("//127.0.0.1", "//localhost"));
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700;800&family=Noto+Sans+Devanagari:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --asphalt: #0d0e10;
+      --panel: #16181b;
+      --line: #ffffff24;
+      --chalk: #f2efe8;
+      --mist: #a8a6a0;
+      --paint: #ffc83d;
+      --content: 1120px;
+      --display: "Barlow Condensed", "Noto Sans Devanagari", sans-serif;
+      --body: "Barlow", "Noto Sans Devanagari", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 70px;
+    }
+
+    body {
+      margin: 0;
+      background: var(--asphalt);
+      color: var(--chalk);
+      font-family: var(--body);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--paint);
+      outline-offset: 3px;
+    }
+
+    .site-header {
+      position: absolute;
+      z-index: 20;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 22px clamp(20px, 4vw, 64px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 26px;
+      letter-spacing: .2px;
+    }
+
+    .brand-mark {
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .brand-mark i {
+      display: block;
+      width: 4px;
+      border-radius: 4px;
+      background: var(--paint);
+    }
+
+    .brand-mark i:nth-child(1),
+    .brand-mark i:nth-child(5) {
+      height: 10px;
+    }
+
+    .brand-mark i:nth-child(2),
+    .brand-mark i:nth-child(4) {
+      height: 18px;
+    }
+
+    .brand-mark i:nth-child(3) {
+      height: 24px;
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .main-nav a {
+      transition: color .2s;
+    }
+
+    .main-nav a:hover,
+    .site-footer a:hover {
+      color: var(--paint);
+    }
+
+    .nav-feedback {
+      border: 1px solid var(--chalk);
+      border-radius: 6px;
+      padding: 8px 16px;
+    }
+
+    .nav-feedback:hover {
+      border-color: var(--paint);
+    }
+
+    .menu-toggle {
+      display: none;
+      background: transparent;
+      color: var(--chalk);
+      border: 0;
+      font-size: 26px;
+      cursor: pointer;
+    }
+
+    .site-footer {
+      padding: 28px clamp(20px, 4vw, 64px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--line);
+      color: var(--mist);
+      font-size: 14px;
+    }
+
+    .footer-brand {
+      color: var(--chalk);
+      font-size: 22px;
+    }
+
+    @media (max-width: 760px) {
+      .brand {
+        font-size: 23px;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .main-nav {
+        display: none;
+        position: absolute;
+        top: 62px;
+        right: 16px;
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #0d0e10f2;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        min-width: 160px;
+      }
+
+      .main-nav.open {
+        display: flex;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+  {% block extra_head %}{% endblock %}
 </head>
 <body>
+  <header class="site-header">
+    <a class="brand" href="{% url 'home' %}" aria-label="Music App home">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span>Music App</span>
+    </a>
+    <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+      <a href="{% url 'home' %}#about">About</a>
+      <a href="{% url 'home' %}#faq">FAQ</a>
+      <a href="{% url 'feedback' %}" class="nav-feedback">Feedback</a>
+    </nav>
+    <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mainNav">☰</button>
+  </header>
 
+  <main>{% block content %}{% endblock %}</main>
+
+  <footer class="site-footer">
+    <a class="brand footer-brand" href="{% url 'home' %}"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span>Music App</span></a>
+    <span>
+        Designed and Developed by
+        <a href="https://github.com/Akshatswami610"
+           target="_blank"
+           rel="noopener noreferrer">
+            Akshat Swami
+        </a>
+    </span>
+    <a href="{% url 'feedback' %}">Share feedback</a>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded",()=>{
+      const toggle=document.querySelector(".menu-toggle"),nav=document.querySelector(".main-nav");
+      if(!toggle||!nav)return;
+      const set=open=>{nav.classList.toggle("open",open);toggle.setAttribute("aria-expanded",String(open));};
+      toggle.addEventListener("click",()=>set(!nav.classList.contains("open")));
+      nav.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>set(false)));
+    });
+  </script>
+  <script>
+    /* Same-page anchors (About, FAQ): scroll in place instead of reloading.
+       The home page URL carries ?c=<category>, so a plain "/#about" link looked like a new page. */
+    document.addEventListener("click", event => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const link = event.target.closest("a[href*='#']");
+      if (!link) return;
+      const url = new URL(link.href, location.href);
+      if (url.origin !== location.origin || url.pathname !== location.pathname || !url.hash) return;
+      const target = document.getElementById(decodeURIComponent(url.hash.slice(1)));
+      if (!target) return;
+      event.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      history.replaceState(null, "", location.pathname + location.search + url.hash);
+    });
+  </script>
+  {% block extra_js %}{% endblock %}
 </body>
 </html>
