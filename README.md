@@ -26,7 +26,7 @@ A category-based music discovery platform featuring playlists for Gym, Party, Tr
 ## 📁 Project Structure
 
 ```text
-music-app/
+TheRepeat/
 ├── backend/
 │   ├── categories/
 │   ├── config/
@@ -47,7 +47,7 @@ music-app/
 ```bash
 # Clone repository
 git clone YOUR_REPOSITORY_URL
-cd music-app
+cd TheRepeat
 
 # Create virtual environment
 python -m venv env
