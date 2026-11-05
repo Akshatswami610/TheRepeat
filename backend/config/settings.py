@@ -36,8 +36,8 @@ INSTALLED_APPS = [
 # Django Unfold Configuration
 
 UNFOLD = {
-    "SITE_TITLE": "Music-app Admin",
-    "SITE_HEADER": "Music-app",
+    "SITE_TITLE": "TheRepeat Admin",
+    "SITE_HEADER": "TheRepeat",
     "SITE_SUBHEADER": "Music website",
     "SITE_SYMBOL": "home",
 
