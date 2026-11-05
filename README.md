@@ -46,7 +46,7 @@ TheRepeat/
 
 ```bash
 # Clone repository
-git clone YOUR_REPOSITORY_URL
+git clone https://github.com/Akshatswami610/TheRepeat.git
 cd TheRepeat
 
 # Create virtual environment
