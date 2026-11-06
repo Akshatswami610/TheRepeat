@@ -1,10 +1,10 @@
 import os
 from pathlib import Path
-from decouple import config
+from workers import env
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = env.DJANGO_SECRET_KEY
 
 DEBUG = False
 
@@ -97,14 +97,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database Configuration
-
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.environ.get(
-            "DATABASE_PATH",
-            BASE_DIR / "db.sqlite3"
-        ),
+        "ENGINE": "django_cf.db.backends.d1",
+        "CLOUDFLARE_BINDING": "DB",
     }
 }
 
