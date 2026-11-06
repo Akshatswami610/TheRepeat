@@ -1,26 +1,51 @@
+# ==============================
 # Python
+# ==============================
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
 
-
-backend/db.sqlite3
-# Virtual Environment
-.venv/
-venv/
-env/
-
-# Environment Variables
-.env
-.env.*
-
+# ==============================
 # Django
+# ==============================
 *.log
 staticfiles/
 media/
 
-# PyCharm
-.idea/
+# Local Database
+backend/db.sqlite3
 
-# OS
+# ==============================
+# Virtual Environments
+# ==============================
+.venv/
+venv/
+env/
+.venv-workers/
+python_modules/
+
+# ==============================
+# Environment Variables & Secrets
+# ==============================
+.env
+.env.*
+!.env.example
+backend/.env
+
+# ==============================
+# Cloudflare / Wrangler
+# ==============================
+.wrangler/
+
+# ==============================
+# IDE
+# ==============================
+.idea/
+.vscode/
+
+# ==============================
+# OS Files
+# ==============================
 .DS_Store
 Thumbs.db
