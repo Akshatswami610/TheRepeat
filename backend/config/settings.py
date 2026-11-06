@@ -11,6 +11,8 @@ DEBUG = False
 ALLOWED_HOSTS = [
     "therepeat.live",
     "www.therepeat.live",
+    "localhost",
+    "127.0.0.1",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -80,7 +82,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR.parent / "frontend"],
+        "DIRS": [BASE_DIR.parent.parent / "frontend"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
