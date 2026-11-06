@@ -1,4 +1,4 @@
-
+import os
 from pathlib import Path
 from decouple import config
 
@@ -6,9 +6,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    "therepeat.live",
+    "www.therepeat.live",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://therepeat.live",
+    "https://www.therepeat.live",
+]
 
 # Application definition
 
@@ -52,6 +60,7 @@ UNFOLD = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -91,12 +100,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("DB_NAME"),
-        "USER": config("DB_USER"),
-        "PASSWORD": config("DB_PASSWORD"),
-        "HOST": config("DB_HOST", default="localhost"),
-        "PORT": config("DB_PORT", default="5432"),
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.environ.get(
+            "DATABASE_PATH",
+            BASE_DIR / "db.sqlite3"
+        ),
     }
 }
 
@@ -132,7 +140,9 @@ USE_TZ = True
 
 # Static Files
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = '/media/'
 
