@@ -1,0 +1,5 @@
+name = "therepeat"
+main = "backend/src/index.py"
+
+compatibility_date = "2026-11-06"
+compatibility_flags = ["python_workers"]
