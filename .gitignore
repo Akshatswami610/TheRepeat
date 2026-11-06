@@ -6,6 +6,7 @@ __pycache__/
 *.pyo
 *.pyd
 
+media/
 # ==============================
 # Django
 # ==============================
@@ -13,17 +14,9 @@ __pycache__/
 staticfiles/
 media/
 
-# Local Database
-backend/db.sqlite3
 
-# ==============================
-# Virtual Environments
-# ==============================
-.venv/
-venv/
 env/
-.venv-workers/
-python_modules/
+
 
 # ==============================
 # Environment Variables & Secrets
@@ -32,11 +25,6 @@ python_modules/
 .env.*
 !.env.example
 backend/.env
-
-# ==============================
-# Cloudflare / Wrangler
-# ==============================
-.wrangler/
 
 # ==============================
 # IDE
