@@ -67,15 +67,16 @@
 
     .deck {
       width: 100%;
-      margin-top: 56px;
-      padding: 14px;
+      max-width: 680px;
+      margin-top: 128px;
+      padding: 8px 26px 8px 8px;
       display: grid;
-      grid-template-columns: 200px minmax(0, 1fr);
-      gap: 24px;
+      grid-template-columns: 96px minmax(0, 1fr);
+      gap: 18px;
       align-items: center;
       text-align: left;
       border: 1px solid #ffffff66;
-      border-radius: 34px;
+      border-radius: 999px;
       background: linear-gradient(115deg, #ffffff30, #ffffff12);
       box-shadow: 0 18px 55px #0006;
       backdrop-filter: blur(20px);
@@ -83,18 +84,74 @@
     }
 
     .yt-box {
-      width: 200px;
-      height: 200px;
+      position: relative;
+      width: 96px;
+      height: 96px;
       background: #000;
-      border-radius: 20px;
+      border-radius: 50%;
       overflow: hidden;
+      box-shadow: 0 8px 24px #0006, 0 0 0 2px #ffffff2e;
+      animation: spin 14s linear infinite;
+      animation-play-state: paused;
     }
 
-    .yt-box iframe {
+    .yt-box.playing {
+      animation-play-state: running;
+    }
+
+    /* Vinyl centre hole */
+    .yt-box::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 18px;
+      height: 18px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: radial-gradient(circle, #111 52%, #6e6760 60%, #2a2623 100%);
+      box-shadow: 0 0 0 2px #0006;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .yt-box { animation: none; }
+    }
+
+    .yt-box img {
+      position: absolute;
+      inset: 0;
       display: block;
-      width: 200px;
-      height: 200px;
-      border: 0;
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      object-fit: cover;
+    }
+
+    /* YouTube thumbnails are 4:3 with black bars and the square art in the middle:
+       zoom in so only the central square (270 of 480 x 360 px) fills the disc. */
+    .yt-box img.thumb {
+      inset: auto;
+      top: 50%;
+      left: 50%;
+      width: 178%;
+      height: 134%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Hidden YouTube player: kept in the layout (never display:none) so playback isn't blocked. */
+    .yt-hidden {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      opacity: .01;
+      pointer-events: none;
     }
 
     .deck-info {
@@ -106,8 +163,8 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 26px;
+      gap: 14px;
+      margin-bottom: 6px;
     }
 
     .track-copy {
@@ -116,7 +173,7 @@
 
     .track-title {
       display: block;
-      font-size: clamp(19px, 2.4vw, 26px);
+      font-size: clamp(16px, 2vw, 20px);
       font-weight: 600;
       line-height: 1.25;
       white-space: nowrap;
@@ -126,9 +183,9 @@
 
     .track-artist {
       display: block;
-      margin-top: 6px;
+      margin-top: 2px;
       color: #ddd5cc;
-      font-size: 15px;
+      font-size: 13px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -137,13 +194,13 @@
     .controls {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
       flex-shrink: 0;
     }
 
     .ctl {
-      width: 48px;
-      height: 48px;
+      width: 38px;
+      height: 38px;
       border: 1px solid #ffffff55;
       border-radius: 50%;
       display: grid;
@@ -160,14 +217,14 @@
     }
 
     .ctl.main {
-      width: 58px;
-      height: 58px;
+      width: 44px;
+      height: 44px;
       background: #ffffff38;
     }
 
     .ctl svg {
-      width: 22px;
-      height: 22px;
+      width: 17px;
+      height: 17px;
     }
 
     .time-row {
@@ -441,10 +498,11 @@
       }
 
       .deck {
-        margin-top: 40px;
+        margin-top: 88px;
         grid-template-columns: 1fr;
         justify-items: center;
-        border-radius: 26px;
+        padding: 14px;
+        border-radius: 28px;
       }
 
       .deck-info {
@@ -482,7 +540,8 @@
       <p class="now-desc" id="heroDescription">A playlist for wherever the day takes you.</p>
 
       <div class="deck" aria-label="Music player">
-        <div class="yt-box"><div id="youtubePlayer"></div></div>
+        <div class="yt-box"><img id="coverImg" alt="" decoding="async"></div>
+        <div class="yt-hidden" aria-hidden="true"><div id="youtubePlayer"></div></div>
         <div class="deck-info">
           <div class="deck-top">
             <div class="track-copy">
@@ -527,7 +586,7 @@
   <div class="faq">
     <details><summary>Can I use TheRepeat for free?</summary><p>There’s no membership or subscription required to use TheRepeat. YouTube may show ads, and playback is subject to YouTube’s terms and availability.</p></details>
     <details><summary>Do I need to create an account?</summary><p>Not at all. Browse the categories, choose a playlist and press play.</p></details>
-    <details><summary>Why does music play through YouTube?</summary><p>TheRepeat uses YouTube’s embedded player to stream playlists. YouTube requires the player to remain visible while you listen.</p></details>
+    <details><summary>Why does music play through YouTube?</summary><p>TheRepeat uses YouTube’s embedded player to stream playlists. The video itself stays hidden, and the controls here drive it.</p></details>
     <details><summary>Will music start playing automatically?</summary><p>No. Your playlist loads paused. Press play or choose a category to start listening.</p></details>
     <details><summary>Can I suggest a category or playlist?</summary><p>Absolutely. Send your idea through the feedback page. We’d love to hear it.</p></details>
   </div>
@@ -549,6 +608,7 @@ window.onYouTubeIframeAPIReady = () => {
   const categoryList = $("categoryList"), bg = $("stageBg"), title = $("heroTitle"), description = $("heroDescription");
   const trackTitle = $("trackTitle"), trackArtist = $("trackArtist"), playButton = $("togglePlayback");
   const previousButton = $("previousTrack"), nextButton = $("nextTrack"), progress = $("trackProgress");
+  const coverImg = $("coverImg");
   const currentTime = $("currentTime"), totalDuration = $("totalDuration"), hint = $("playHint");
   const BASE_TITLE = "TheRepeat";
   const ICON_PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>';
@@ -588,7 +648,9 @@ window.onYouTubeIframeAPIReady = () => {
     }
   }
 
+  const coverBox = coverImg.parentElement;
   function updatePlayButton(playing) {
+    coverBox.classList.toggle("playing", playing);
     playButton.innerHTML = playing ? ICON_PAUSE : ICON_PLAY;
     playButton.setAttribute("aria-label", playing ? "Pause" : "Play");
     playButton.title = playing ? "Pause" : "Play";
@@ -599,6 +661,19 @@ window.onYouTubeIframeAPIReady = () => {
     const v = player.getVideoData() || {};
     if (v.title) trackTitle.textContent = v.title;
     if (v.author) trackArtist.textContent = v.author.replace(/ - Topic$/, "");
+    if (v.video_id) setCover("https://i.ytimg.com/vi/" + v.video_id + "/hqdefault.jpg", currentCategoryCover);
+  }
+
+  let currentCategoryCover = "";
+  function setCover(src, fallback) {
+    if (!src || coverImg.getAttribute("src") === src) return;
+    coverImg.onerror = () => {
+      coverImg.onerror = null;
+      coverImg.classList.remove("thumb");
+      if (fallback) coverImg.src = fallback;
+    };
+    coverImg.classList.add("thumb");
+    coverImg.src = src;
   }
 
   function showPlayerError(code) {
@@ -641,14 +716,17 @@ window.onYouTubeIframeAPIReady = () => {
     if (!pendingPlaylistId || !window.youtubeApiReady || !window.YT || !window.YT.Player) return;
     if (!player) {
       player = new YT.Player("youtubePlayer", {
-        width: "200", height: "200",
-        playerVars: { playsinline: 1, controls: 1, rel: 0, enablejsapi: 1, origin: window.location.origin },
+        width: "1", height: "1",
+        playerVars: {
+          playsinline: 1, controls: 0, disablekb: 1, fs: 0, modestbranding: 1,
+          iv_load_policy: 3, rel: 0, enablejsapi: 1, origin: window.location.origin
+        },
         events: {
           onReady: () => {
             playerReady = true;
             loadPendingPlaylist();
             clearInterval(progressTimer);
-            progressTimer = setInterval(updateProgress, 500);
+            progressTimer = setInterval(updateProgress, 250);
           },
           onStateChange: e => {
             const S = YT.PlayerState;
@@ -693,6 +771,10 @@ window.onYouTubeIframeAPIReady = () => {
     document.title = BASE_TITLE + " · " + (category.title || "Music");
     trackTitle.textContent = "Your playlist is getting ready…";
     trackArtist.textContent = category.title || "";
+    currentCategoryCover = category.cover_img || "";
+    coverImg.classList.remove("thumb");
+    coverImg.removeAttribute("src");
+    if (currentCategoryCover) coverImg.src = currentCategoryCover;
     currentTime.textContent = totalDuration.textContent = "0:00";
     progress.value = 0; progress.style.setProperty("--p", "0%");
     hint.textContent = "";
