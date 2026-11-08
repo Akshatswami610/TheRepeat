@@ -1,12 +1,12 @@
 import os
 from pathlib import Path
-from workers import env
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = env.DJANGO_SECRET_KEY
+SECRET_KEY = config("SECRET_KEY")
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "therepeat.live",
@@ -82,7 +82,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR.parent.parent / "frontend"],
+        "DIRS": [BASE_DIR.parent / "frontend"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -101,8 +101,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database Configuration
 DATABASES = {
     "default": {
-        "ENGINE": "django_cf.db.backends.d1",
-        "CLOUDFLARE_BINDING": "DB",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DB_NAME"),
+        "USER": config("DB_USER"),
+        "PASSWORD": config("DB_PASSWORD"),
+        "HOST": config("DB_HOST", default="localhost"),
+        "PORT": config("DB_PORT", default="5432"),
     }
 }
 
