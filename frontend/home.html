@@ -10,6 +10,38 @@
       display: flex;
       justify-content: center;
       overflow: hidden;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255, 200, 61, 0.16), transparent 30%),
+        radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.09), transparent 28%);
+    }
+
+    .stage::before,
+    .stage::after {
+      content: "";
+      position: absolute;
+      inset: auto;
+      pointer-events: none;
+      border-radius: 50%;
+      filter: blur(18px);
+      opacity: 0.8;
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+
+    .stage::before {
+      width: 340px;
+      height: 340px;
+      left: 8%;
+      top: 18%;
+      background: rgba(255, 200, 61, 0.12);
+    }
+
+    .stage::after {
+      width: 420px;
+      height: 420px;
+      right: 6%;
+      bottom: 8%;
+      background: rgba(153, 170, 255, 0.08);
+      animation-delay: 1.5s;
     }
 
     .stage-bg {
@@ -17,7 +49,8 @@
       inset: 0;
       z-index: -2;
       background: #1a1b1e center/cover no-repeat;
-      transition: opacity .4s;
+      transition: opacity .4s, transform .8s ease;
+      transform: scale(1.08);
     }
 
     .stage-shade {
@@ -35,6 +68,8 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
+      position: relative;
+      z-index: 1;
     }
 
     .now {
@@ -43,6 +78,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      animation: riseUp .8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
     }
 
     .now h1 {
@@ -55,6 +91,7 @@
       text-transform: uppercase;
       white-space: nowrap;
       text-shadow: 0 4px 22px #0009;
+      animation: titleGlow 3.5s ease-in-out infinite alternate;
     }
 
     .now-desc {
@@ -64,6 +101,7 @@
       font-size: 17px;
       line-height: 1.55;
       text-shadow: 0 2px 12px #000;
+      animation: fadeUp .9s ease .15s both;
     }
 
     .deck {
@@ -77,12 +115,13 @@
       gap: 18px;
       align-items: center;
       text-align: left;
-      border: 1px solid #ffffff66;
+      border: 1px solid rgba(255,255,255,0.22);
       border-radius: 999px;
-      background: linear-gradient(115deg, #ffffff30, #ffffff12);
-      box-shadow: 0 18px 55px #0006;
+      background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.07));
+      box-shadow: 0 24px 60px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.18);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
+      animation: cardIn .9s cubic-bezier(0.2, 0.7, 0.2, 1) .12s both;
     }
 
     .yt-box {
@@ -92,13 +131,19 @@
       background: #000;
       border-radius: 50%;
       overflow: hidden;
-      box-shadow: 0 8px 24px #0006, 0 0 0 2px #ffffff2e;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.46), 0 0 0 2px rgba(255,255,255,0.18), inset 0 0 0 1px rgba(255,255,255,0.08);
       animation: spin 14s linear infinite;
       animation-play-state: paused;
+      transition: transform .25s ease, box-shadow .25s ease;
     }
 
     .yt-box.playing {
       animation-play-state: running;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.52), 0 0 0 2px rgba(255,200,61,0.26), inset 0 0 0 1px rgba(255,255,255,0.12);
+    }
+
+    .yt-box:hover {
+      transform: scale(1.02);
     }
 
     /* Vinyl centre hole */
@@ -119,8 +164,64 @@
       to { transform: rotate(360deg); }
     }
 
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes riseUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes titleGlow {
+      from {
+        text-shadow: 0 4px 22px rgba(0,0,0,0.6), 0 0 18px rgba(255,200,61,0.15);
+      }
+      to {
+        text-shadow: 0 4px 26px rgba(0,0,0,0.72), 0 0 20px rgba(255,200,61,0.22);
+      }
+    }
+
+    @keyframes drift {
+      from { transform: translate3d(-8px, 0, 0) scale(1); }
+      to { transform: translate3d(12px, -16px, 0) scale(1.08); }
+    }
+
     @media (prefers-reduced-motion: reduce) {
-      .yt-box { animation: none; }
+      .yt-box,
+      .stage::before,
+      .stage::after,
+      .now,
+      .now h1,
+      .now-desc,
+      .deck {
+        animation: none !important;
+      }
+      html { scroll-behavior: auto; }
     }
 
     .yt-box img {
@@ -203,20 +304,22 @@
     .ctl {
       width: 38px;
       height: 38px;
-      border: 1px solid #ffffff55;
+      border: 1px solid rgba(255,255,255,0.22);
       border-radius: 50%;
       display: grid;
       place-items: center;
-      background: #ffffff22;
+      background: rgba(255,255,255,0.1);
       color: #fff;
       cursor: pointer;
-      transition: background .2s, transform .2s;
+      transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
     }
 
     @media (hover: hover) {
       .ctl:hover {
-        background: #ffffff40;
-        transform: scale(1.06);
+        background: rgba(255,255,255,0.18);
+        transform: translateY(-1px) scale(1.06);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
       }
     }
 
@@ -231,7 +334,16 @@
     .ctl.main {
       width: 44px;
       height: 44px;
-      background: #ffffff38;
+      background: linear-gradient(135deg, rgba(255,200,61,0.92), rgba(255,171,0,0.92));
+      color: #111;
+      border-color: rgba(255,200,61,0.8);
+      box-shadow: 0 12px 22px rgba(255,200,61,0.28), inset 0 1px 0 rgba(255,255,255,0.35);
+    }
+
+    @media (hover: hover) {
+      .ctl.main:hover {
+        background: linear-gradient(135deg, rgba(255,216,104,1), rgba(255,185,0,1));
+      }
     }
 
     .ctl svg {
@@ -358,21 +470,23 @@
       height: 88px;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid #ffffff4d;
+      border: 2px solid rgba(255,255,255,0.28);
       padding: 3px;
-      background: #ffffff20;
-      transition: transform .2s, border-color .2s, box-shadow .2s;
+      background: rgba(255,255,255,0.08);
+      transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease, filter .22s ease;
+      box-shadow: 0 12px 22px rgba(0,0,0,0.18);
     }
 
     @media (hover: hover) {
       .cat:hover img {
-        transform: translateY(-4px);
+        transform: translateY(-4px) scale(1.02);
+        filter: saturate(1.15);
       }
     }
 
     .cat.active img {
       border-color: var(--paint);
-      box-shadow: 0 0 0 4px #ffc83d40, 0 8px 28px #0008;
+      box-shadow: 0 0 0 4px rgba(255,200,61,0.25), 0 14px 28px rgba(0,0,0,0.24);
     }
 
     .cat span {
@@ -698,11 +812,26 @@
 <section class="section faq-wrap" id="faq"><div class="inner">
   <h2>Good to know</h2>
   <div class="faq">
-    <details><summary>Can I use TheRepeat for free?</summary><p>There’s no membership or subscription required to use TheRepeat. YouTube may show ads, and playback is subject to YouTube’s terms and availability.</p></details>
-    <details><summary>Do I need to create an account?</summary><p>Not at all. Browse the categories, choose a playlist and press play.</p></details>
-    <details><summary>Why does music play through YouTube?</summary><p>TheRepeat uses YouTube’s embedded player to stream playlists. The video itself stays hidden, and the controls here drive it.</p></details>
-    <details><summary>Will music start playing automatically?</summary><p>No. Your playlist loads paused. Press play or choose a category to start listening.</p></details>
-    <details><summary>Can I suggest a category or playlist?</summary><p>Absolutely. Send your idea through the feedback page. We’d love to hear it.</p></details>
+    <details>
+      <summary>Is TheRepeat completely free to use?</summary>
+      <p>Yes. TheRepeat is designed to be free to explore and listen to. The music is streamed through YouTube, so normal YouTube availability and viewing rules still apply, and ads may appear depending on the content and device.</p>
+    </details>
+    <details>
+      <summary>Do I need to sign up or create an account?</summary>
+      <p>No account is required. You can jump straight in, browse categories, pick a vibe, and start playing without any registration or login process.</p>
+    </details>
+    <details>
+      <summary>Why is the music playing through YouTube?</summary>
+      <p>TheRepeat uses YouTube’s streaming infrastructure to power its playlists. It lets us keep the experience fast and easy, while giving you access to a large library of music without building a separate music catalog from scratch.</p>
+    </details>
+    <details>
+      <summary>Does the music start automatically?</summary>
+      <p>No. For a smoother experience, the playlist loads in a paused state first. You can tap play whenever you’re ready, or choose a different category to switch the mood instantly.</p>
+    </details>
+    <details>
+      <summary>Can I suggest a new category or playlist?</summary>
+      <p>Absolutely. If there’s a vibe, route, or sound you want to see added, send us your suggestion through the feedback page. We’re always looking for more ways to match the moment.</p>
+    </details>
   </div>
   <a class="more" href="{% url 'feedback' %}">Share feedback</a>
 </div></section>
