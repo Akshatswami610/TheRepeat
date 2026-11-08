@@ -4,6 +4,7 @@
 <style>
     .stage {
       position: relative;
+      min-height: 100vh;
       min-height: 100svh;
       isolation: isolate;
       display: flex;
@@ -29,7 +30,7 @@
     .stage-grid {
       width: 100%;
       max-width: 980px;
-      padding: 150px 24px 64px;
+      padding: calc(150px + var(--safe-top)) max(24px, var(--safe-right)) calc(64px + var(--safe-bottom)) max(24px, var(--safe-left));
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -68,10 +69,11 @@
     .deck {
       width: 100%;
       max-width: 680px;
-      margin-top: 128px;
+      margin-top: clamp(56px, 12vh, 128px);
       padding: 8px 26px 8px 8px;
       display: grid;
-      grid-template-columns: 96px minmax(0, 1fr);
+      --disc: 96px;
+      grid-template-columns: var(--disc) minmax(0, 1fr);
       gap: 18px;
       align-items: center;
       text-align: left;
@@ -85,8 +87,8 @@
 
     .yt-box {
       position: relative;
-      width: 96px;
-      height: 96px;
+      width: var(--disc, 96px);
+      height: var(--disc, 96px);
       background: #000;
       border-radius: 50%;
       overflow: hidden;
@@ -211,9 +213,19 @@
       transition: background .2s, transform .2s;
     }
 
-    .ctl:hover {
-      background: #ffffff40;
-      transform: scale(1.06);
+    @media (hover: hover) {
+      .ctl:hover {
+        background: #ffffff40;
+        transform: scale(1.06);
+      }
+    }
+
+    @media (pointer: coarse) {
+      .ctl { width: 44px; height: 44px; }
+      .ctl.main { width: 52px; height: 52px; }
+      #trackProgress { height: 28px; }
+      #trackProgress::-webkit-slider-thumb { width: 16px; height: 16px; margin-top: -6px; }
+      #trackProgress::-moz-range-thumb { width: 16px; height: 16px; }
     }
 
     .ctl.main {
@@ -313,13 +325,18 @@
 
     .cat-list {
       display: flex;
-      justify-content: safe center;
       gap: 28px;
       padding: 10px 6px 14px;
       overflow-x: auto;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
       scroll-snap-type: x proximity;
       scrollbar-width: thin;
     }
+
+    /* Centre when they fit, scroll from the start when they don't (works in every browser) */
+    .cat-list > :first-child { margin-left: auto; }
+    .cat-list > :last-child { margin-right: auto; }
 
     .cat {
       flex: 0 0 auto;
@@ -347,8 +364,10 @@
       transition: transform .2s, border-color .2s, box-shadow .2s;
     }
 
-    .cat:hover img {
-      transform: translateY(-4px);
+    @media (hover: hover) {
+      .cat:hover img {
+        transform: translateY(-4px);
+      }
     }
 
     .cat.active img {
@@ -478,9 +497,32 @@
       padding-bottom: 2px;
     }
 
+    @media (min-width: 1600px) {
+      .stage-grid { max-width: 1180px; }
+      .deck { max-width: 780px; }
+      .now-desc { max-width: 620px; font-size: 20px; }
+      .lead { max-width: 720px; font-size: 20px; }
+      .faq { max-width: 960px; }
+    }
+
+    @media (min-width: 2200px) {
+      .stage-grid { max-width: 1400px; }
+      .deck { max-width: 900px; }
+    }
+
+    @media (max-width: 1024px) and (min-width: 901px) {
+      .steps h3 { font-size: 23px; }
+    }
+
     @media (max-width: 900px) {
       .steps {
         grid-template-columns: 1fr;
+      }
+
+      .steps div {
+        padding-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 22px;
       }
 
       .section {
@@ -498,36 +540,108 @@
       }
 
       .deck {
-        margin-top: 88px;
-        grid-template-columns: 1fr;
-        justify-items: center;
-        padding: 14px;
-        border-radius: 28px;
-      }
-
-      .deck-info {
-        width: 100%;
-        padding: 0 6px 6px;
-      }
-
-      .deck-top {
-        flex-direction: column;
-        align-items: stretch;
+        --disc: 80px;
+        margin-top: 72px;
         gap: 14px;
-        margin-bottom: 16px;
-      }
-
-      .track-copy {
-        text-align: center;
-      }
-
-      .controls {
-        justify-content: center;
+        padding: 8px 20px 8px 8px;
       }
 
       .cat-list {
         gap: 20px;
       }
+    }
+
+    /* Small phones */
+    @media (max-width: 420px) {
+      .stage-grid { padding-left: max(16px, var(--safe-left)); padding-right: max(16px, var(--safe-right)); }
+      .cats-title { gap: 14px; font-size: 16px; }
+      .cat { width: 88px; }
+      .cat img { width: 76px; height: 76px; }
+      .cat span { max-width: 88px; font-size: 13px; }
+      .faq summary { font-size: 16px; }
+      .section { padding: 56px 16px; }
+    }
+
+    /* Phones: same pill player as desktop, just scaled down (disc, buttons, text) */
+    @media (max-width: 480px) {
+      .stage-grid {
+        padding-top: 118px;
+      }
+
+      .now h1 {
+        white-space: normal;
+        font-size: clamp(42px, 17vw, 72px);
+        letter-spacing: -0.04em;
+      }
+
+      .now-desc {
+        max-width: 290px;
+        margin-top: 12px;
+      }
+
+      .deck {
+        --disc: 64px;
+        width: min(100%, 360px);
+        margin-top: 42px;
+        gap: 10px;
+        padding: 8px 10px 8px 8px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.09);
+        border-color: rgba(255, 255, 255, 0.38);
+      }
+
+      .yt-box {
+        width: var(--disc);
+        height: var(--disc);
+      }
+
+      .yt-box::after { width: 13px; height: 13px; }
+      .deck-info { padding: 2px 0; }
+      .deck-top {
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+      }
+      .track-copy { min-width: 0; }
+      .track-title {
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .track-artist { font-size: 11px; }
+      .controls {
+        gap: 4px;
+        flex-shrink: 0;
+      }
+      .ctl, .ctl.main { width: 28px; height: 28px; }
+      .ctl.main { width: 32px; height: 32px; }
+      .ctl svg { width: 13px; height: 13px; }
+      .time-row { grid-template-columns: 28px minmax(0, 1fr) 28px; gap: 6px; font-size: 10px; }
+      #trackProgress { height: 18px; }
+    }
+
+    @media (max-width: 360px) {
+      .deck {
+        --disc: 58px;
+        padding-right: 8px;
+        gap: 8px;
+      }
+      .yt-box::after { width: 12px; height: 12px; }
+      .ctl, .ctl.main { width: 26px; height: 26px; }
+      .ctl.main { width: 30px; height: 30px; }
+      .ctl svg { width: 12px; height: 12px; }
+      .track-title { font-size: 12px; }
+      .time-row { grid-template-columns: 24px minmax(0, 1fr) 24px; }
+      .now h1 { font-size: clamp(34px, 17vw, 56px); }
+    }
+
+    /* Landscape phones and other short screens: don't waste the little height there is */
+    @media (max-height: 520px) and (orientation: landscape) {
+      .stage-grid { padding-top: calc(84px + var(--safe-top)); padding-bottom: 32px; }
+      .deck { margin-top: 28px; }
+      .cats { margin-top: 18px; }
+      .section { padding-top: 56px; padding-bottom: 56px; }
     }
 </style>
 {% endblock %}

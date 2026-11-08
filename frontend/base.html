@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="theme-color" content="#0d0e10">
   <meta name="description" content="TheRepeat brings the right playlist to every road, routine and moment.">
@@ -25,6 +25,11 @@
       --mist: #a8a6a0;
       --paint: #ffc83d;
       --content: 1120px;
+      --gutter: clamp(16px, 4vw, 64px);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
       --display: "Barlow Condensed", "Noto Sans Devanagari", sans-serif;
       --body: "Barlow", "Noto Sans Devanagari", sans-serif;
     }
@@ -35,7 +40,17 @@
 
     html {
       scroll-behavior: smooth;
-      scroll-padding-top: 70px;
+      scroll-padding-top: calc(70px + var(--safe-top));
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+
+    img,
+    svg,
+    video {
+      max-width: 100%;
     }
 
     body {
@@ -45,6 +60,10 @@
       font-family: var(--body);
       font-size: 16px;
       line-height: 1.5;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-wrap: break-word;
+      overflow-x: hidden;
     }
 
     a {
@@ -69,10 +88,11 @@
       top: 0;
       left: 0;
       width: 100%;
-      padding: 22px clamp(20px, 4vw, 64px);
+      padding: calc(22px + var(--safe-top)) max(var(--gutter), var(--safe-right)) 22px max(var(--gutter), var(--safe-left));
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 16px;
     }
 
     .brand {
@@ -123,6 +143,7 @@
 
     .main-nav a {
       transition: color .2s;
+      padding: 6px 0;
     }
 
     .main-nav a:hover,
@@ -146,11 +167,14 @@
       color: var(--chalk);
       border: 0;
       font-size: 26px;
+      line-height: 1;
+      min-width: 44px;
+      min-height: 44px;
       cursor: pointer;
     }
 
     .site-footer {
-      padding: 28px clamp(20px, 4vw, 64px);
+      padding: 28px max(var(--gutter), var(--safe-right)) calc(28px + var(--safe-bottom)) max(var(--gutter), var(--safe-left));
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -187,9 +211,24 @@
       color: var(--asphalt);
     }
 
+    @media (min-width: 1600px) {
+      :root { --content: 1280px; }
+      body { font-size: 17px; }
+    }
+
+    @media (min-width: 2200px) {
+      :root { --content: 1480px; }
+      body { font-size: 19px; }
+    }
+
     @media (max-width: 760px) {
       .brand {
         font-size: 23px;
+      }
+
+      .site-footer {
+        flex-direction: column;
+        align-items: flex-start;
       }
 
       .menu-toggle {
@@ -199,8 +238,8 @@
       .main-nav {
         display: none;
         position: absolute;
-        top: 62px;
-        right: 16px;
+        top: calc(62px + var(--safe-top));
+        right: max(16px, var(--safe-right));
         padding: 18px;
         border: 1px solid var(--line);
         border-radius: 10px;
@@ -209,11 +248,32 @@
         align-items: flex-start;
         gap: 16px;
         min-width: 160px;
+        max-width: calc(100vw - 32px);
       }
 
       .main-nav.open {
         display: flex;
       }
+    }
+
+    @media (max-width: 360px) {
+      .brand { font-size: 21px; gap: 8px; }
+      .footer-links { gap: 12px; }
+    }
+
+    /* Hover-only polish stays off touch screens so nothing "sticks" after a tap */
+    @media (hover: none) {
+      .nav-feedback:hover { border-color: var(--chalk); }
+      .main-nav a:hover,
+      .site-footer a:hover { color: inherit; }
+      .site-footer .coffee:hover { background: transparent; color: var(--paint); }
+    }
+
+    /* Touch-sized tap targets */
+    @media (pointer: coarse) {
+      .main-nav a { padding: 10px 0; }
+      .nav-feedback { padding: 10px 16px; }
+      .site-footer .coffee { padding: 11px 16px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -261,6 +321,9 @@
       if(!toggle||!nav)return;
       const set=open=>{nav.classList.toggle("open",open);toggle.setAttribute("aria-expanded",String(open));};
       toggle.addEventListener("click",()=>set(!nav.classList.contains("open")));
+      document.addEventListener("click",e=>{if(!nav.contains(e.target)&&!toggle.contains(e.target))set(false);});
+      document.addEventListener("keydown",e=>{if(e.key==="Escape")set(false);});
+      window.addEventListener("resize",()=>{if(window.innerWidth>760)set(false);});
       nav.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>set(false)));
     });
   </script>
