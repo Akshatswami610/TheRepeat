@@ -3,6 +3,7 @@ boto3==1.43.127
 botocore==1.43.127
 dj-database-url==3.1.2
 Django==6.1.2
+django-cors-headers==4.9.0
 django-storages==1.14.6
 django-unfold==0.110.1
 djangorestframework==3.18.3
@@ -11,6 +12,7 @@ jmespath==1.1.0
 pillow==13.0.0
 psycopg==3.3.8
 psycopg-binary==3.3.8
+psycopg2-binary==2.9.13
 python-dateutil==2.9.0.post0
 python-decouple==3.8
 s3transfer==0.19.3

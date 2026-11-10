@@ -14,18 +14,21 @@ SECRET_KEY = config("SECRET_KEY")
 
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = config(
-    "ALLOWED_HOSTS",
-    default="therepeat.live,www.therepeat.live,localhost,127.0.0.1, therepeat-backend.onrender.com",
-    cast=Csv()
-)
+ALLOWED_HOSTS = [
+    "therepeat.live",
+    "www.therepeat.live",
+    "therepeat.pages.dev",
+    "therepeat-backend.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 
-CSRF_TRUSTED_ORIGINS = config(
-    "CSRF_TRUSTED_ORIGINS",
-    default="https://therepeat-backend.onrender.com, https://therepeat.live,https://www.therepeat.live",
-    cast=Csv()
-)
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://therepeat-backend.onrender.com",
+    "https://therepeat.pages.dev",
+    "https://therepeat.live",
+    "https://www.therepeat.live",
+]
 
 # =====================================
 # APPLICATIONS
@@ -45,6 +48,7 @@ INSTALLED_APPS = [
 
     # Third-party apps
     "rest_framework",
+    "corsheaders",
 
     # Local apps
     "categories",
@@ -78,6 +82,7 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
 
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
