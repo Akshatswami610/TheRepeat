@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="theme-color" content="#0d0e10">
+  <meta name="description" content="TheRepeat brings the right playlist to every road, routine and moment.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23ffc83d'/%3E%3Cpath d='M8 13v6M12 9v14M16 6v20M20 9v14M24 13v6' stroke='%230d0e10' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <title>TheRepeat · Share your feedback</title>
+  <script>
+    /* YouTube embeds fail on a raw IP origin; keep local development on "localhost". */
+    if (location.hostname === "127.0.0.1") location.replace(location.href.replace("//127.0.0.1", "//localhost"));
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700;800&family=Noto+Sans+Devanagari:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --asphalt: #0d0e10;
+      --panel: #16181b;
+      --panel-2: #1b1d21;
+      --line: #ffffff24;
+      --chalk: #f2efe8;
+      --mist: #a8a6a0;
+      --paint: #ffc83d;
+      --paint-soft: rgba(255, 200, 61, 0.18);
+      --content: 1120px;
+      --gutter: clamp(16px, 4vw, 64px);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+      --display: "Barlow Condensed", "Noto Sans Devanagari", sans-serif;
+      --body: "Barlow", "Noto Sans Devanagari", sans-serif;
+      --shadow-soft: 0 16px 40px rgba(0,0,0,0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: calc(70px + var(--safe-top));
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+
+    img,
+    svg,
+    video {
+      max-width: 100%;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(255,200,61,0.12), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(123,146,255,0.12), transparent 25%),
+        var(--asphalt);
+      color: var(--chalk);
+      font-family: var(--body);
+      font-size: 16px;
+      line-height: 1.5;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-wrap: break-word;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--paint);
+      outline-offset: 3px;
+    }
+
+    .site-header {
+      position: absolute;
+      z-index: 20;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: calc(22px + var(--safe-top)) max(var(--gutter), var(--safe-right)) 22px max(var(--gutter), var(--safe-left));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 26px;
+      letter-spacing: .2px;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.26));
+    }
+
+    .brand-mark {
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .brand-mark i {
+      display: block;
+      width: 4px;
+      border-radius: 4px;
+      background: linear-gradient(180deg, #ffd669, var(--paint));
+      box-shadow: 0 0 12px rgba(255,200,61,0.5);
+    }
+
+    .brand-mark i:nth-child(1),
+    .brand-mark i:nth-child(5) {
+      height: 10px;
+    }
+
+    .brand-mark i:nth-child(2),
+    .brand-mark i:nth-child(4) {
+      height: 18px;
+    }
+
+    .brand-mark i:nth-child(3) {
+      height: 24px;
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-weight: 500;
+      font-size: 15px;
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 999px;
+      background: rgba(13,14,16,0.34);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    .main-nav a {
+      transition: color .2s ease, background .2s ease, transform .2s ease;
+      padding: 8px 12px;
+      border-radius: 999px;
+    }
+
+    .main-nav a:hover,
+    .site-footer a:hover {
+      color: var(--paint);
+    }
+
+    .nav-feedback {
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .nav-feedback:hover {
+      border-color: rgba(255,200,61,0.65);
+      background: rgba(255,200,61,0.08);
+    }
+
+    .menu-toggle {
+      display: none;
+      background: rgba(255,255,255,0.04);
+      color: var(--chalk);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      font-size: 26px;
+      line-height: 1;
+      min-width: 46px;
+      min-height: 46px;
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .site-footer {
+      padding: 28px max(var(--gutter), var(--safe-right)) calc(28px + var(--safe-bottom)) max(var(--gutter), var(--safe-left));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      color: var(--mist);
+      font-size: 14px;
+      background: rgba(12,12,14,0.45);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .footer-brand {
+      color: var(--chalk);
+      font-size: 22px;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .site-footer .coffee {
+      padding: 8px 14px;
+      border: 1px solid rgba(255,200,61,0.7);
+      border-radius: 999px;
+      color: var(--paint);
+      font-weight: 500;
+      background: rgba(255,200,61,0.04);
+      transition: background .2s ease, color .2s ease, transform .2s ease;
+    }
+
+    .site-footer .coffee:hover {
+      background: var(--paint);
+      color: var(--asphalt);
+      transform: translateY(-1px);
+    }
+
+    @media (min-width: 1600px) {
+      :root { --content: 1280px; }
+      body { font-size: 17px; }
+    }
+
+    @media (min-width: 2200px) {
+      :root { --content: 1480px; }
+      body { font-size: 19px; }
+    }
+
+    @media (max-width: 760px) {
+      .brand {
+        font-size: 23px;
+      }
+
+      .site-footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .main-nav {
+        display: none;
+        position: absolute;
+        top: calc(62px + var(--safe-top));
+        right: max(16px, var(--safe-right));
+        padding: 18px;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 18px;
+        background: rgba(13,14,16,0.88);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        min-width: 170px;
+        max-width: calc(100vw - 32px);
+        box-shadow: 0 18px 34px rgba(0,0,0,0.3);
+      }
+
+      .main-nav a {
+        width: 100%;
+        padding: 10px 12px;
+      }
+
+      .nav-feedback {
+        width: 100%;
+        text-align: center;
+      }
+
+      .main-nav.open {
+        display: flex;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .brand { font-size: 21px; gap: 8px; }
+      .footer-links { gap: 12px; }
+    }
+
+    /* Hover-only polish stays off touch screens so nothing "sticks" after a tap */
+    @media (hover: none) {
+      .nav-feedback:hover { border-color: var(--chalk); }
+      .main-nav a:hover,
+      .site-footer a:hover { color: inherit; }
+      .site-footer .coffee:hover { background: transparent; color: var(--paint); }
+    }
+
+    /* Touch-sized tap targets */
+    @media (pointer: coarse) {
+      .main-nav a { padding: 10px 0; }
+      .nav-feedback { padding: 10px 16px; }
+      .site-footer .coffee { padding: 11px 16px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+  
+<style>
+  .fb {
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: calc(120px + var(--safe-top)) max(clamp(16px, 5vw, 72px), var(--safe-right)) calc(70px + var(--safe-bottom)) max(clamp(16px, 5vw, 72px), var(--safe-left));
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 540px);
+    gap: clamp(32px, 7vw, 110px);
+    align-items: start;
+    max-width: 1280px;
+    margin: auto;
+  }
+
+  .fb-intro {
+    position: relative;
+    animation: fadeUp .8s ease both;
+  }
+
+  .fb-intro h1 {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(44px, 9vw, 128px);
+    line-height: .88;
+    text-transform: uppercase;
+    overflow-wrap: break-word;
+    text-shadow: 0 10px 22px rgba(0,0,0,0.2);
+  }
+
+  .fb-intro p {
+    max-width: 420px;
+    margin: 26px 0 0;
+    color: var(--mist);
+    font-size: 18px;
+    line-height: 1.65;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-top: 34px;
+    color: var(--chalk);
+    border-bottom: 1px solid var(--paint);
+    padding-bottom: 2px;
+    font-size: 15px;
+    transition: color .2s ease, border-color .2s ease;
+  }
+
+  .back-link:hover {
+    color: var(--paint);
+    border-color: rgba(255,200,61,0.75);
+  }
+
+  .fb-form {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(22px, 4vw, 36px);
+    background: linear-gradient(180deg, rgba(22,24,27,0.96), rgba(17,18,22,0.92));
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 22px;
+    box-shadow: 0 22px 60px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    animation: riseUp .9s ease .08s both;
+  }
+
+  .fb-form label {
+    margin: 16px 0 7px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .fb-form label:first-of-type {
+    margin-top: 0;
+  }
+
+  .optional {
+    color: var(--mist);
+    font-weight: 400;
+  }
+
+  .fb-form input,
+  .fb-form textarea {
+    width: 100%;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 13px 14px;
+    color: var(--chalk);
+    background: rgba(13,14,16,0.72);
+    transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  .fb-form input:focus,
+  .fb-form textarea:focus {
+    border-color: rgba(255,200,61,0.7);
+    box-shadow: 0 0 0 4px rgba(255,200,61,0.12);
+    outline: none;
+  }
+
+  .fb-form textarea {
+    resize: vertical;
+    min-height: 150px;
+  }
+
+  .fb-form ::placeholder {
+    color: #6f6d68;
+  }
+
+  .send {
+    margin-top: 20px;
+    border: 0;
+    border-radius: 12px;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #ffd76a, var(--paint));
+    color: var(--asphalt);
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: filter .2s ease, transform .2s ease, box-shadow .2s ease;
+    box-shadow: 0 12px 28px rgba(255,200,61,0.22);
+  }
+
+  .send:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+
+  .send:disabled {
+    opacity: .6;
+    cursor: wait;
+  }
+
+  .status {
+    min-height: 22px;
+    margin: 14px 0 0;
+    font-size: 14px;
+    color: var(--paint);
+  }
+
+  .status.error {
+    color: #ff8f8f;
+  }
+
+  .note {
+    margin: 16px 0 0;
+    color: var(--mist);
+    font-size: 13px;
+  }
+
+  .fb-form input,
+  .fb-form textarea {
+    font-size: 16px; /* stops iOS from zooming the page on focus */
+  }
+
+  .fb-form textarea {
+    max-width: 100%;
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes riseUp {
+    from {
+      opacity: 0;
+      transform: translateY(18px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @media (pointer: coarse) {
+    .fb-form input { min-height: 48px; }
+    .send { min-height: 50px; }
+    .back-link { padding: 8px 0 4px; }
+  }
+
+  @media (min-width: 1600px) {
+    .fb { max-width: 1500px; grid-template-columns: minmax(0, 1fr) minmax(0, 620px); }
+    .fb-intro p { max-width: 520px; font-size: 20px; }
+    .fb-form { padding: 44px; }
+  }
+
+  @media (max-width: 860px) {
+    .fb {
+      grid-template-columns: 1fr;
+      padding-top: calc(100px + var(--safe-top));
+      gap: 32px;
+    }
+
+    .fb-intro p { max-width: 560px; }
+  }
+
+  @media (max-width: 420px) {
+    .fb-form { padding: 18px; border-radius: 18px; }
+    .fb-intro p { font-size: 16px; margin-top: 18px; }
+  }
+
+  @media (max-height: 520px) and (orientation: landscape) {
+    .fb { padding-top: calc(84px + var(--safe-top)); }
+  }
+</style>
+
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="TheRepeat home">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span>TheRepeat</span>
+    </a>
+    <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+      <a href="/#about">About</a>
+      <a href="/#faq">FAQ</a>
+      <a href="/feedback/" class="nav-feedback">Feedback</a>
+    </nav>
+    <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mainNav">☰</button>
+  </header>
+
+  <main>
+<section class="fb">
+  <div class="fb-intro">
+    <h1>Help shape what plays next</h1>
+    <p>Have a playlist idea, spotted something that needs fixing, or want to see a new category? We’re listening. Tell us what you think.</p>
+    <a class="back-link" href="/">Back to TheRepeat</a>
+  </div>
+  <form id="feedbackForm" class="fb-form" novalidate>
+    
+    <label for="feedbackName">Name</label>
+    <input id="feedbackName" name="name" placeholder="Name" type="text" maxlength="100" autocomplete="name" required>
+    <label for="feedbackEmail">Email <span class="optional">(optional)</span></label>
+    <input id="feedbackEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com">
+    <label for="feedbackMessage">Your feedback</label>
+    <textarea id="feedbackMessage" name="message" rows="6" maxlength="3000" placeholder="Share an idea, report an issue, or suggest a playlist…" required></textarea>
+    <p class="status" id="formStatus" role="status" aria-live="polite"></p>
+    <button class="send" type="submit" id="feedbackSubmit">Send message</button>
+    <p class="note">Please avoid sharing passwords or other sensitive personal information.</p>
+  </form>
+</section>
+</main>
+
+  <footer class="site-footer">
+    <a class="brand footer-brand" href="/"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span>TheRepeat</span></a>
+    <span>
+        Designed and Developed By
+        <a href="https://github.com/Akshatswami610"
+           target="_blank"
+           rel="noopener noreferrer">
+            Akshat Swami
+        </a>
+    </span>
+    <span class="footer-links">
+      <a class="coffee" href="https://buymeacoffee.com/akshatswami_" target="_blank" rel="noopener noreferrer">&#9749; Support the project</a>
+    </span>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded",()=>{
+      const toggle=document.querySelector(".menu-toggle"),nav=document.querySelector(".main-nav");
+      if(!toggle||!nav)return;
+      const set=open=>{nav.classList.toggle("open",open);toggle.setAttribute("aria-expanded",String(open));};
+      toggle.addEventListener("click",()=>set(!nav.classList.contains("open")));
+      document.addEventListener("click",e=>{if(!nav.contains(e.target)&&!toggle.contains(e.target))set(false);});
+      document.addEventListener("keydown",e=>{if(e.key==="Escape")set(false);});
+      window.addEventListener("resize",()=>{if(window.innerWidth>760)set(false);});
+      nav.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>set(false)));
+    });
+  </script>
+  <script>
+    /* Same-page anchors (About, FAQ): scroll in place instead of reloading.
+       The home page URL carries ?c=<category>, so a plain "/#about" link looked like a new page. */
+    document.addEventListener("click", event => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const link = event.target.closest("a[href*='#']");
+      if (!link) return;
+      const url = new URL(link.href, location.href);
+      if (url.origin !== location.origin || url.pathname !== location.pathname || !url.hash) return;
+      const target = document.getElementById(decodeURIComponent(url.hash.slice(1)));
+      if (!target) return;
+      event.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      history.replaceState(null, "", location.pathname + location.search + url.hash);
+    });
+  </script>
+  
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+  const form=document.getElementById("feedbackForm");if(!form)return;
+  const status=document.getElementById("formStatus"),submit=document.getElementById("feedbackSubmit");
+  form.addEventListener("submit",async event=>{
+    event.preventDefault();status.textContent="";status.classList.remove("error");
+    const payload={name:form.elements["name"].value.trim(),email:form.elements["email"].value.trim()||null,message:form.elements["message"].value.trim()};
+    if(!payload.name||!payload.message){status.textContent="Please add your name and a message before sending.";status.classList.add("error");return;}
+    submit.disabled=true;submit.textContent="Sending…";
+    try{
+      const response=await fetch("https://therepeat-backend.onrender.com/api/feedback/",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+      const result=await response.json().catch(()=>({}));
+      if(!response.ok){const first=Object.values(result).flat()[0];throw new Error(typeof first==="string"?first:"We couldn’t send your message. Please try again.");}
+      form.reset();status.textContent="Thanks for reaching out. Your feedback has been sent.";
+    }catch(error){status.textContent=error.message||"Something went wrong. Please try again in a moment.";status.classList.add("error");}
+    finally{submit.disabled=false;submit.textContent="Send message";}
+  });
+});
+</script>
+
+</body>
+</html>
