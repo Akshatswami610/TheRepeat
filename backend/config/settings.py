@@ -23,8 +23,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://therepeat-backend.onrender.com",
+CORS_ALLOWED_ORIGINS = [
     "https://therepeat.pages.dev",
     "https://therepeat.live",
     "https://www.therepeat.live",
