@@ -1,49 +1,60 @@
 import os
 from pathlib import Path
-from decouple import config
+from decouple import config, Csv
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+# =====================================
+# CORE SETTINGS
+# =====================================
+
 SECRET_KEY = config("SECRET_KEY")
 
-DEBUG = True
+DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = [
-    "therepeat.live",
-    "www.therepeat.live",
-    "localhost",
-    "127.0.0.1",
-]
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS",
+    default="therepeat.live,www.therepeat.live,localhost,127.0.0.1",
+    cast=Csv()
+)
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://therepeat.live",
-    "https://www.therepeat.live",
-]
+CSRF_TRUSTED_ORIGINS = config(
+    "CSRF_TRUSTED_ORIGINS",
+    default="https://therepeat.live,https://www.therepeat.live",
+    cast=Csv()
+)
 
-# Application definition
+
+# =====================================
+# APPLICATIONS
+# =====================================
 
 INSTALLED_APPS = [
-    # Django Unfold - must be before django.contrib.admin
-    'unfold',
+    # Django Unfold
+    "unfold",
 
     # Django default apps
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
 
     # Third-party apps
-    'rest_framework',
+    "rest_framework",
 
     # Local apps
-    'categories',
-    'feedback',
+    "categories",
+    "feedback",
 ]
 
 
-# Django Unfold Configuration
+# =====================================
+# DJANGO UNFOLD
+# =====================================
 
 UNFOLD = {
     "SITE_TITLE": "TheRepeat Admin",
@@ -58,26 +69,35 @@ UNFOLD = {
 }
 
 
-# Middleware
+# =====================================
+# MIDDLEWARE
+# =====================================
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 
-# URL Configuration
+# =====================================
+# URL CONFIGURATION
+# =====================================
 
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = "config.urls"
+
+WSGI_APPLICATION = "config.wsgi.application"
 
 
-# Templates
+# =====================================
+# TEMPLATES
+# =====================================
 
 TEMPLATES = [
     {
@@ -95,61 +115,115 @@ TEMPLATES = [
 ]
 
 
-WSGI_APPLICATION = 'config.wsgi.application'
+# =====================================
+# DATABASE - SUPABASE POSTGRESQL
+# =====================================
 
-
-# Database Configuration
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("DB_NAME"),
-        "USER": config("DB_USER"),
-        "PASSWORD": config("DB_PASSWORD"),
-        "HOST": config("DB_HOST", default="localhost"),
-        "PORT": config("DB_PORT", default="5432"),
-    }
+    "default": dj_database_url.config(
+        default=config("DATABASE_URL"),
+        conn_max_age=0,
+        ssl_require=True,
+    )
 }
 
 
-# Password Validation
+# =====================================
+# PASSWORD VALIDATION
+# =====================================
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
 
-# Internationalization
+# =====================================
+# INTERNATIONALIZATION
+# =====================================
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'Asia/Kolkata'
+TIME_ZONE = "Asia/Kolkata"
 
 USE_I18N = True
 
 USE_TZ = True
 
 
-# Static Files
+# =====================================
+# STATIC FILES - WHITENOISE
+# =====================================
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-MEDIA_URL = '/media/'
+STORAGES = {
+    "default": {
+        "BACKEND": "config.storage_backends.SupabaseMediaStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
-MEDIA_ROOT = BASE_DIR / 'categories' / 'media'
 
-# Default Primary Key
+# =====================================
+# SUPABASE STORAGE
+# =====================================
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+SUPABASE_URL = config("SUPABASE_URL")
+
+SUPABASE_S3_ENDPOINT = config("SUPABASE_S3_ENDPOINT")
+
+SUPABASE_S3_REGION = config("SUPABASE_S3_REGION")
+
+SUPABASE_S3_ACCESS_KEY = config("SUPABASE_S3_ACCESS_KEY")
+
+SUPABASE_S3_SECRET_KEY = config("SUPABASE_S3_SECRET_KEY")
+
+SUPABASE_MEDIA_BUCKET = config(
+    "SUPABASE_MEDIA_BUCKET",
+    default="therepeat-media",
+)
+
+
+# =====================================
+# SECURITY
+# =====================================
+
+if not DEBUG:
+    SECURE_SSL_REDIRECT = config(
+        "SECURE_SSL_REDIRECT",
+        default=True,
+        cast=bool,
+    )
+
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = "DENY"
+
+    SECURE_PROXY_SSL_HEADER = (
+        "HTTP_X_FORWARDED_PROTO",
+        "https",
+    )
+
+
+# =====================================
+# DEFAULT PRIMARY KEY
+# =====================================
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
