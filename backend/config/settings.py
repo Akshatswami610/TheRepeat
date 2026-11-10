@@ -16,13 +16,13 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = config(
     "ALLOWED_HOSTS",
-    default="therepeat.live,www.therepeat.live,localhost,127.0.0.1",
+    default="therepeat.live,www.therepeat.live,localhost,127.0.0.1, therepeat-backend.onrender.com",
     cast=Csv()
 )
 
 CSRF_TRUSTED_ORIGINS = config(
     "CSRF_TRUSTED_ORIGINS",
-    default="https://therepeat.live,https://www.therepeat.live",
+    default="https://therepeat-backend.onrender.com, https://therepeat.live,https://www.therepeat.live",
     cast=Csv()
 )
 
