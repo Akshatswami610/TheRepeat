@@ -1,6 +1,7 @@
 # TheRepeat
 
 **Discover music for every mood, moment and activity.**
+
 <img width="1470" height="820" alt="Screenshot 2026-11-15 at 9 00 43 PM" src="https://github.com/user-attachments/assets/85b712f3-93aa-4175-b125-c0cd672accd3" />
 
 A category-based music discovery platform featuring playlists for Gym, Party, Travel, Relaxing, Trucks, Buses and much more.
