@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Keep internal/admin/API endpoints out of search crawling.
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://therepeat.live/sitemap.xml
