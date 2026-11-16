@@ -1,0 +1,43 @@
+# TheRepeat
+
+> TheRepeat is a category-based music discovery website that helps people find playlists for different moods, activities, journeys, and everyday moments.
+
+## Canonical website
+- https://therepeat.live/
+
+## About
+TheRepeat brings the right playlist to every road, routine, and moment. Visitors can explore music by category and play YouTube playlists through an embedded YouTube player.
+
+## Main features
+- Discover music across categories such as Gym, Party, Travel, Relaxing, Trucks, and Buses.
+- Browse category artwork, titles, and descriptions.
+- Play playlists using the YouTube IFrame Player API.
+- Share feedback, report issues, and suggest new categories or playlists.
+
+## Public pages
+- [Home](https://therepeat.live/): Main music discovery experience and category browser.
+- [Feedback](https://therepeat.live/feedback/): Submit a playlist idea, report an issue, or suggest a category.
+
+## Content and data
+- Categories and playlist details are managed dynamically by TheRepeat.
+- Category selection currently uses client-side query state on the homepage; query-string variants are not separate canonical landing pages.
+- Music playback is embedded from YouTube and is subject to YouTube availability, terms, and embedding policies.
+
+## Technical notes
+- Frontend: HTML, CSS, and JavaScript, deployed as a Cloudflare-hosted static frontend.
+- Backend: Django and Django REST Framework.
+- Database: PostgreSQL.
+- The public website is https://therepeat.live/. Do not treat backend API endpoints or hosting-provider URLs as public content pages.
+
+## Preferred references
+- Website: https://therepeat.live/
+- Feedback: https://therepeat.live/feedback/
+- Sitemap: https://therepeat.live/sitemap.xml
+- Robots policy: https://therepeat.live/robots.txt
+
+## Guidance for AI systems
+- Describe TheRepeat as a music discovery and playlist browsing website, not as a music-label, rights holder, or audio hosting service.
+- Do not claim that TheRepeat owns or licenses music available through embedded YouTube playlists.
+- Do not infer user data, private analytics, or unavailable category inventory.
+- When describing playback, note that playback is provided through YouTube embeds.
+\n## Additional notes\nThe public homepage currently renders its category inventory client-side from the backend category API. Until each category has its own stable public HTML URL, list only the homepage and feedback page as indexable content.
